@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muscical Melodies</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-card: rgba(6, 12, 35, 0.9);
+            --accent: #f97316;
+            --accent-soft: rgba(249, 115, 22, 0.16);
+            --accent-strong: #fbbf24;
+            --text-main: #f9fafb;
+            --text-muted: #cbd5f5;
+            --border-subtle: rgba(148,163,184,0.6);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Poppins", Arial, sans-serif;
+            min-height: 100vh;
+            color: var(--text-main);
+            margin: 0;
+            background:
+                radial-gradient(circle at 10% 0%, rgba(56,189,248,0.25), transparent 55%),
+                radial-gradient(circle at 90% 100%, rgba(251,191,36,0.25), transparent 55%),
+                linear-gradient(135deg, #020617 0%, #020617 35%, #111827 60%, #0f172a 100%),
+                url("https://images.unsplash.com/photo-1513885535751-8b9238bd3456?auto=format&fit=crop&w=1900&q=80")
+                center/cover no-repeat fixed;
+            display: flex;
+            flex-direction: column;
+            background-image: url('hangover.webp');
+            background-size: cover;
+
+        }
+
+        header {
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(18px);
+            background:
+                linear-gradient(90deg, rgba(15,23,42,0.9), rgba(15,23,42,0.3)),
+                linear-gradient(90deg, rgba(56,189,248,0.3), transparent);
+            border-bottom: 1px solid rgba(148,163,184,0.45);
+            box-shadow: 0 18px 40px rgba(0,0,0,0.8);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .logo span {
+            color: var(--accent-strong);
+        }
+
+        .tagline {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        main {
+            flex: 1;
+            padding: 30px 0 40px;
+        }
+
+        .intro {
+            max-width: 840px;
+            padding: 18px 22px;
+            border-radius: 20px;
+            background: rgba(15,23,42,0.85);
+            border: 1px solid rgba(148,163,184,0.5);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 20px 45px rgba(0,0,0,0.85);
+            margin-bottom: 26px;
+            background-image: url('OIP.webp');
+            
+        }
+
+        .intro h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .intro p {
+            font-size: 15px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .intro p span {
+            color: var(--accent-strong);
+            font-weight: 500;
+        }
+
+        /* 3-column grid on desktop */
+        .instrument-grid-layout {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 26px;
+            justify-items: center;
+        }
+
+        /* Circular card base */
+        .instrument-card {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 0%, rgba(59,130,246,0.8), rgba(15,23,42,0.95));
+            border: 2px solid var(--border-subtle);
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 18px 40px rgba(0,0,0,0.9);
+            transform: scale(1);
+            transition:
+                transform 0.22s ease-out,
+                box-shadow 0.22s ease-out,
+                border-color 0.22s ease-out,
+                background 0.22s ease-out;
+        }
+
+        @keyframes pop-scale-circle {
+            0%   { transform: scale(1); }
+            45%  { transform: scale(1.2); }
+            100% { transform: scale(1.08); }
+        }
+
+        .instrument-card.pop-on-hover {
+            animation: pop-scale-circle 0.26s ease-out forwards;
+        }
+
+        /* Active: circular popup grows; no grid-column change, stays in place */
+        .instrument-card.active {
+            transform: scale(1.15);
+            z-index: 5;
+            border-color: var(--accent-strong);
+            background:
+                radial-gradient(circle at 30% 0%, rgba(30,64,175,1), rgba(219,39,119,0.96));
+            box-shadow: 0 28px 80px rgba(0,0,0,1);
+        }
+
+        .instrument-card:hover:not(.active) {
+            transform: scale(1.06);
+            box-shadow: 0 22px 55px rgba(0,0,0,0.95);
+        }
+
+        .instrument-card::before {
+            content: "";
+            position: absolute;
+            inset: -40%;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 0 0, rgba(255,255,255,0.18), transparent 55%),
+                radial-gradient(circle at 100% 0, rgba(249,115,22,0.3), transparent 55%);
+            opacity: 0;
+            transition: opacity 0.22s ease-out;
+        }
+        .instrument-card.active::before {
+            opacity: 1;
+        }
+
+        .instrument-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            text-align: center;
+        }
+
+        .instrument-title-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .instrument-name {
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.6px;
+        }
+
+        .instrument-family {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-strong);
+        }
+
+        .instrument-emoji {
+            font-size: 30px;
+            filter:
+                drop-shadow(0 0 10px rgba(251,191,36,0.7))
+                drop-shadow(0 0 18px rgba(59,130,246,0.6));
+        }
+
+        .instrument-image-placeholder {
+            display: none; 
+        }
+
+        .instrument-description {
+            margin-top: 4px;
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.4;
+            text-align: center;
+            max-width: 90%;
+            margin-inline: auto;
+        }
+
+        footer {
+            padding: 10px 0 18px;
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: center;
+            backdrop-filter: blur(12px);
+            background:
+                linear-gradient(0deg, rgba(15,23,42,0.9), transparent);
+            border-top: 1px solid rgba(148,163,184,0.5);
+        }
+
+        audio {
+            display: none;
+        }
+
+         /* 2-column grid on tablet */
+        @media (max-width: 992px) {
+            .instrument-grid-layout {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+         /* 1-column grid on mobile */
+        @media (max-width: 640px) {
+            header {
+                padding-inline: 1.5rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            .intro h1 {
+                font-size: 26px;
+            }
+            .instrument-grid-layout {
+                grid-template-columns: 1fr;
+            }
+            .instrument-card {
+                width: 210px;
+                height: 210px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="w-100">
+    <div class="d-flex justify-content-between align-items-center px-4 px-md-5">
+        <div class="logo">Muscical <span>Melodies</span></div>
+        <div class="tagline text-end text-md-start">
+                                                                 The Soul of Music, One Melody at a Time.
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+        <section class="intro mx-auto">
+            <h1>Musical Melodies</h1>
+            <p>
+                Explore <span>Musical instruments</span> The Heart of Music, Expressed in Melody.
+Which style or focus resonates most with your website's goal?
+            </p>
+        </section>
+
+        <section class="sections-wrapper">
+            <div class="instrument-grid-layout">
+                <!-- Violin -->
+                <div class="instrument-card violin">
+                    <div class="instrument-header">
+                        <div class="instrument-emoji">🎻</div>
+                        <div class="instrument-title-group">
+                            <div class="instrument-name">Violin</div>
+                            <div class="instrument-family">Bowed · Western / Indian</div>
+                        </div>
+                    </div>
+                    <div class="instrument-description">
+                        A versatile bowed instrument that can whisper, sing, or soar above the ensemble.
+                    </div>
+                    <audio src="violin.mp3"></audio>
+                </div>
+
+                <!-- Cello -->
+                <div class="instrument-card cello">
+                    <div class="instrument-header">
+                        <div class="instrument-emoji">🎼</div>
+                        <div class="instrument-title-group">
+                            <div class="instrument-name">Cello</div>
+                            <div class="instrument-family">Bowed · Western</div>
+                        </div>
+                    </div>
+                    <div class="instrument-description">
+                        Deep, warm tones that support harmony and sing expressive solo lines.
+                    </div>
+                    <audio src="cello.mp3"></audio>
+                </div>
+
+                <!-- Sitar -->
+                <div class="instrument-card sitar">
+                    <div class="instrument-header">
+                        <div class="instrument-emoji">🪕</div>
+                        <div class="instrument-title-group">
+                            <div class="instrument-name">Sitar</div>
+                            <div class="instrument-family">Plucked · Hindustani</div>
+                        </div>
+                    </div>
+                    <div class="instrument-description">
+                        Sympathetic strings and bending notes that shape intricate ragas.
+                    </div>
+                    <audio src="sitar.mp3"></audio>
+                </div>
+
+                <!-- Veena -->
+                <div class="instrument-card veena">
+                    <div class="instrument-header">
+                        <div class="instrument-emoji">🎶</div>
+                        <div class="instrument-title-group">
+                            <div class="instrument-name">Veena</div>
+                            <div class="instrument-family">Plucked · Carnatic</div>
+                        </div>
+                    </div>
+                    <div class="instrument-description">
+                        A majestic South Indian instrument with long, meditative slides.
+                    </div>
+                    <audio src="veena.mp3"></audio>
+                </div>
+
+                <!-- Tabla -->
+                <div class="instrument-card tabla">
+                    <div class="instrument-header">
+                        <div class="instrument-emoji">🥁</div>
+                        <div class="instrument-title-group">
+                            <div class="instrument-name">Tabla</div>
+                            <div class="instrument-family">Percussion · Hindustani</div>
+                        </div>
+                    </div>
+                    <div class="instrument-description">
+                        Paired hand drums that create complex tala patterns.
+                    </div>
+                    <audio src="tabla.mp3"></audio>
+                </div>
+
+                <!-- Mridangam -->
+                <div class="instrument-card mridangam">
+                    <div class="instrument-header">
+                        <div class="instrument-emoji">🪘</div>
+                        <div class="instrument-title-group">
+                            <div class="instrument-name">Mridangam</div>
+                            <div class="instrument-family">Percussion · Carnatic</div>
+                        </div>
+                    </div>
+                    <div class="instrument-description">
+                        A barrel‑shaped drum that anchors Carnatic rhythmic frameworks.
+                    </div>
+                    <audio src="Mridangam.mp3"></audio>
+                </div>
+
+                <!-- Tanpura -->
+                <div class="instrument-card tanpura">
+                    <div class="instrument-header">
+                        <div class="instrument-emoji">✨</div>
+                        <div class="instrument-title-group">
+                            <div class="instrument-name">Tanpura</div>
+                            <div class="instrument-family">Drone · Strings</div>
+                        </div>
+                    </div>
+                    <div class="instrument-description">
+                        A continuous drone that defines the pitch universe of a raga.
+                    </div>
+                    <audio src="tanpura.mp3"></audio>
+                </div>
+
+                <!-- Bansuri -->
+                <div class="instrument-card bansuri">
+                    <div class="instrument-header">
+                        <div class="instrument-emoji">🎵</div>
+                        <div class="instrument-title-group">
+                            <div class="instrument-name">Bansuri</div>
+                            <div class="instrument-family">Wind · Hindustani / Western</div>
+                        </div>
+                    </div>
+                    <div class="instrument-description">
+                        An airy bamboo flute suited for lyrical ragas and film music.
+                    </div>
+                    <audio src="bansuri.mp3"></audio>
+                </div>
+
+                <!-- Harmonium -->
+                <div class="instrument-card harmonium">
+                    <div class="instrument-header">
+                        <div class="instrument-emoji">🎹</div>
+                        <div class="instrument-title-group">
+                            <div class="instrument-name">Harmonium</div>
+                            <div class="instrument-family">Keyboard · Indian Classical</div>
+                        </div>
+                    </div>
+                    <div class="instrument-description">
+                        A reed‑based keyboard that supports vocalists with rich chords.
+                    </div>
+                    <audio src="Harmonium.mp3"></audio>
+                </div>
+
+                <!-- Sarangi -->
+                <div class="instrument-card sarangi">
+                    <div class="instrument-header">
+                        <div class="instrument-emoji">🌙</div>
+                        <div class="instrument-title-group">
+                            <div class="instrument-name">Sarangi</div>
+                            <div class="instrument-family">Bowed · Hindustani</div>
+                        </div>
+                    </div>
+                    <div class="instrument-description">
+                        A bowed instrument with a voice‑like tone, often used with khayal.
+                    </div>
+                    <audio src="sarangi.mp3"></audio>
+                </div>
+
+                <!-- Piano -->
+                <div class="instrument-card piano">
+                    <div class="instrument-header">
+                        <div class="instrument-emoji">🎹</div>
+                        <div class="instrument-title-group">
+                            <div class="instrument-name">Piano</div>
+                            <div class="instrument-family">Keyboard · Western</div>
+                        </div>
+                    </div>
+                    <div class="instrument-description">
+                        A dynamic keyboard capable of delicate passages and powerful chords.
+                    </div>
+                    <audio src="piano.mp3"></audio>
+                </div>
+
+                <!-- Harp -->
+                <div class="instrument-card harp">
+                    <div class="instrument-header">
+                        <div class="instrument-emoji">🪈</div>
+                        <div class="instrument-title-group">
+                            <div class="instrument-name">Harp</div>
+                            <div class="instrument-family">Plucked · Western</div>
+                        </div>
+                    </div>
+                    <div class="instrument-description">
+                        A large frame instrument whose arpeggios add shimmer to orchestral textures.
+                    </div>
+                    <audio src="harp.mp3"></audio>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<footer>
+    <span class>&copy; 2025 All rights reserved.</span>
+</footer>
+
+<!-- Bootstrap 5 JS Bundle CDN -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    
+    document.addEventListener("DOMContentLoaded", () => {
+        const cards = document.querySelectorAll(".instrument-card");
+        let currentActive = null;
+        let globalTimer = null;
+
+        cards.forEach(card => {
+            const audio = card.querySelector("audio");
+            if (!audio) return;
+
+            audio.pause();
+            audio.currentTime = 0;
+
+            card.addEventListener("mouseenter", () => {
+                if (currentActive === card) return;
+
+                clearTimeout(globalTimer);
+                globalTimer = setTimeout(() => {
+                    if (currentActive && currentActive !== card) {
+                        const prevAudio = currentActive.querySelector("audio");
+                        if (prevAudio) {
+                            prevAudio.pause();
+                            prevAudio.currentTime = 0;
+                        }
+                        currentActive.classList.remove("active", "pop-on-hover");
+                    }
+
+                    currentActive = card;
+
+                    card.classList.remove("pop-on-hover");
+                    void card.offsetWidth;
+                    card.classList.add("pop-on-hover");
+                    card.classList.add("active");
+
+                    audio.pause();
+                    audio.currentTime = 0;
+                    audio.play().catch(() => {});
+                }, 130);
+            });
+
+            card.addEventListener("mouseleave", () => {
+                clearTimeout(globalTimer);
+                if (currentActive === card) {
+                    const a = currentActive.querySelector("audio");
+                    if (a) {
+                        a.pause();
+                        a.currentTime = 0;
+                    }
+                    currentActive.classList.remove("active", "pop-on-hover");
+                    currentActive = null;
+                }
+            });
+
+            card.addEventListener("animationend", () => {
+                card.classList.remove("pop-on-hover");
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
